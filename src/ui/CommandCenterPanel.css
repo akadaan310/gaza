@@ -1,0 +1,66 @@
+.command-center-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 6, 14, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.command-center-panel {
+  width: min(720px, 92vw);
+  max-height: 82vh;
+  overflow-y: auto;
+  background: linear-gradient(180deg, rgba(20, 18, 34, 0.95), rgba(10, 10, 20, 0.97));
+  border: 1px solid rgba(159, 168, 255, 0.35);
+  border-radius: 4px;
+  padding: 22px 26px;
+  color: #dfe4ff;
+  font-family: "Courier New", monospace;
+  box-shadow: 0 0 60px rgba(120, 130, 255, 0.15);
+}
+
+.ccp-header {
+  font-size: 13px;
+  letter-spacing: 0.25em;
+  color: #b9a2f5;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(159, 168, 255, 0.25);
+  padding-bottom: 10px;
+}
+
+.ccp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 28px;
+}
+
+.ccp-grid h4 {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: #8fd0ff;
+  margin: 0 0 6px;
+}
+
+.ccp-grid p, .ccp-grid li {
+  font-size: 12.5px;
+  margin: 2px 0;
+  color: #c6cbe8;
+}
+
+.ccp-grid ul {
+  margin: 4px 0 0;
+  padding-left: 16px;
+  max-height: 90px;
+  overflow-y: auto;
+}
+
+.ccp-footer {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(159, 168, 255, 0.2);
+  font-size: 10.5px;
+  color: #8890b8;
+}

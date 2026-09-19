@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-09-19",
+  "source": {
+    "id": "openstreetmap",
+    "attribution": "© OpenStreetMap contributors (ODbL 1.0)",
+    "api": "Overpass API",
+    "fetchedAt": "2026-09-19"
+  },
+  "tiles": [
+    {
+      "id": "gaza_city_palestine_square",
+      "label": "Gaza City — Palestine Square",
+      "center": {
+        "lat": 31.5063,
+        "lon": 34.4616
+      },
+      "bounds": {
+        "minLon": 34.4574985,
+        "maxLon": 34.4656559,
+        "minLat": 31.503737,
+        "maxLat": 31.5094506
+      },
+      "buildingCount": 1050,
+      "roadCount": 84
+    },
+    {
+      "id": "jabalia",
+      "label": "Jabalia",
+      "center": {
+        "lat": 31.5316,
+        "lon": 34.4944
+      },
+      "bounds": {
+        "minLon": 34.4912025,
+        "maxLon": 34.4979294,
+        "minLat": 31.5283696,
+        "maxLat": 31.5349515
+      },
+      "buildingCount": 776,
+      "roadCount": 39
+    },
+    {
+      "id": "deir_al_balah",
+      "label": "Deir al-Balah",
+      "center": {
+        "lat": 31.4102,
+        "lon": 34.3599
+      },
+      "bounds": {
+        "minLon": 34.356711,
+        "maxLon": 34.3632986,
+        "minLat": 31.4069886,
+        "maxLat": 31.4134401
+      },
+      "buildingCount": 479,
+      "roadCount": 45
+    },
+    {
+      "id": "al_shati_camp",
+      "label": "Al-Shati (Beach) Camp",
+      "center": {
+        "lat": 31.5306,
+        "lon": 34.4457
+      },
+      "bounds": {
+        "minLon": 34.4423885,
+        "maxLon": 34.4492266,
+        "minLat": 31.5273168,
+        "maxLat": 31.5339398
+      },
+      "buildingCount": 1386,
+      "roadCount": 34
+    }
+  ]
+}

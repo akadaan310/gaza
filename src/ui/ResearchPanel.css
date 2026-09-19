@@ -1,0 +1,55 @@
+.research-panel {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 30;
+  width: 260px;
+  font-family: "Courier New", monospace;
+  pointer-events: none;
+}
+
+.research-panel-title {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #8fd0ff;
+  margin-bottom: 6px;
+}
+
+.research-card {
+  background: rgba(8, 10, 20, 0.72);
+  border: 1px solid rgba(159, 168, 255, 0.3);
+  border-radius: 3px;
+  padding: 10px 12px;
+  backdrop-filter: blur(4px);
+}
+
+.research-badge {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.research-label {
+  font-size: 13px;
+  color: #eef1ff;
+  margin-bottom: 4px;
+}
+
+.research-source, .research-extra {
+  font-size: 10.5px;
+  color: #a8afd8;
+  margin-top: 2px;
+}
+
+.research-note {
+  font-size: 10.5px;
+  color: #d8ddf5;
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+.research-empty {
+  color: #8890b8;
+  font-size: 11px;
+}

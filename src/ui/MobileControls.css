@@ -1,0 +1,68 @@
+.mobile-controls-surface {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  touch-action: none;
+  pointer-events: auto;
+}
+
+.joystick-base {
+  position: absolute;
+  left: 28px;
+  bottom: 34px;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(2px);
+}
+
+.joystick-stick {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 52px;
+  height: 52px;
+  margin-left: -26px;
+  margin-top: -26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: none;
+}
+
+.mobile-action-buttons {
+  position: absolute;
+  right: 24px;
+  bottom: 34px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 14px;
+}
+
+.mobile-btn {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  color: #eee;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  backdrop-filter: blur(2px);
+}
+
+.interact-btn {
+  width: 68px;
+  height: 68px;
+  font-size: 22px;
+  background: rgba(232, 194, 106, 0.18);
+  border-color: rgba(232, 194, 106, 0.55);
+  color: #f2d896;
+}
+
+.research-btn {
+  font-size: 20px;
+}

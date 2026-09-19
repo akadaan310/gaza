@@ -1,122 +1,93 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { Suspense, useEffect } from "react";
+import { Canvas } from "@react-three/fiber";
+import { EffectComposer, Bloom, N8AO, Vignette } from "@react-three/postprocessing";
+import * as THREE from "three";
+import { useWorldStore } from "./store/worldStore";
+import { GazaWorld } from "./world/GazaWorld";
+import { InterstellarScene } from "./world/InterstellarScene";
+import { SkySystem } from "./world/SkySystem";
+import { Guide } from "./world/Guide";
+import { Portal } from "./world/Portal";
+import { CommandCenter } from "./world/CommandCenter";
+import { FocusResetter } from "./world/FocusResetter";
+import { FirstPersonController, isTouchDevice } from "./player/FirstPersonController";
+import { IntroOverlay } from "./ui/IntroOverlay";
+import { ResearchPanel } from "./ui/ResearchPanel";
+import { CommandCenterPanel } from "./ui/CommandCenterPanel";
+import { MobileControls } from "./ui/MobileControls";
+import { NavigationPanel } from "./ui/NavigationPanel";
+import { navigateTo } from "./world/autoNavActions";
+import { GUIDE_LOCAL, PORTAL_LOCAL, COMMAND_CENTER_LOCAL } from "./world/landmarks";
+import "./ui/world-ui.css";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+function KeyboardBindings() {
+  useEffect(() => {
+    if (isTouchDevice()) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "KeyR") useWorldStore.getState().toggleResearchMode();
+      if (e.code === "KeyE") useWorldStore.getState().triggerInteract();
+      // Number-key auto-nav: the pointer is captured by Pointer Lock while
+      // looking around, so on-screen destination buttons aren't reliably
+      // mouse-clickable mid-play — hotkeys are the robust path on desktop.
+      if (e.code === "Digit1") navigateTo("The Guide", GUIDE_LOCAL);
+      if (e.code === "Digit2") navigateTo("Bridge Portal", PORTAL_LOCAL);
+      if (e.code === "Digit3") navigateTo("Command Center", COMMAND_CENTER_LOCAL);
+      if (e.code === "Escape") useWorldStore.getState().cancelAutoNav();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+  return null;
 }
 
-export default App
+export default function App() {
+  const inInterstellar = useWorldStore((s) => s.inInterstellar);
+  const commandCenterOpen = useWorldStore((s) => s.commandCenterOpen);
+  const touch = isTouchDevice();
+
+  return (
+    <div className="app-root">
+      <Canvas
+        shadows
+        camera={{ fov: 68, near: 0.1, far: 6000 }}
+        gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.55 }}
+        dpr={touch ? [1, 1.5] : [1, 2]}
+      >
+        <Suspense fallback={null}>
+          <KeyboardBindings />
+          <FocusResetter />
+          <FirstPersonController />
+          {inInterstellar ? (
+            <InterstellarScene />
+          ) : (
+            <>
+              <SkySystem />
+              <GazaWorld />
+              <Guide />
+              <Portal />
+              <CommandCenter />
+            </>
+          )}
+          <EffectComposer multisampling={0}>
+            <N8AO aoRadius={2.2} intensity={1.0} distanceFalloff={1} quality="medium" />
+            <Bloom mipmapBlur intensity={0.55} luminanceThreshold={0.5} luminanceSmoothing={0.15} />
+            <Vignette eskil={false} offset={0.15} darkness={0.45} />
+          </EffectComposer>
+        </Suspense>
+      </Canvas>
+
+      <div className="crosshair" />
+      <IntroOverlay />
+      <ResearchPanel />
+      <NavigationPanel />
+      {commandCenterOpen && <CommandCenterPanel />}
+      {touch && (
+        <MobileControls
+          onInteract={() => useWorldStore.getState().triggerInteract()}
+          onToggleResearch={() => useWorldStore.getState().toggleResearchMode()}
+        />
+      )}
+    </div>
+  );
+}
