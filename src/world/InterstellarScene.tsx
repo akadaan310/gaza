@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { useWorldStore } from "../store/worldStore";
 import { earthToInterstellar, buildConstellationEdges, type InterstellarNode } from "./interstellar";
 import { AL_FATIHA, computeRootRecurrence, type RootRecurrence } from "../quran/data";
+import { colorForRoot } from "./rootColors";
 
 const RETURN_PORTAL_POS = new THREE.Vector3(0, 0, 60);
 const RETURN_RADIUS = 10;
@@ -13,6 +14,7 @@ export function InterstellarScene() {
   const { camera } = useThree();
   const realTiles = useWorldStore((s) => s.loadedRealTiles);
   const activeRelation = useWorldStore((s) => s.activeRelation);
+  const activatedGuides = useWorldStore((s) => s.activatedGuides);
   const [nearReturn, setNearReturn] = useState(false);
   const lastPulse = useRef(useWorldStore.getState().interactPulse);
   const groupRef = useRef<THREE.Group>(null);
@@ -88,14 +90,20 @@ export function InterstellarScene() {
 
         {nodes.map((n) => {
           const isOrigin = activeRelation?.buildingId === n.id;
-          const size = isOrigin ? 2.4 : 0.6 + n.magnitude * 1.4;
+          const activation = activatedGuides.get(n.id);
+          const size = isOrigin ? 2.4 : activation ? 1.5 : 0.6 + n.magnitude * 1.4;
+          const color = isOrigin
+            ? "#f5d98f"
+            : activation
+              ? colorForRoot(activation.rootId).getStyle()
+              : "#cfe0ff";
           return (
             <mesh key={n.id} position={n.position}>
               <sphereGeometry args={[size, 12, 12]} />
               <meshStandardMaterial
-                color={isOrigin ? "#f5d98f" : "#cfe0ff"}
-                emissive={isOrigin ? "#f5b23f" : "#7fa8ff"}
-                emissiveIntensity={isOrigin ? 3.5 : 1.1 + n.magnitude}
+                color={color}
+                emissive={color}
+                emissiveIntensity={isOrigin ? 3.5 : activation ? 2.4 : 1.1 + n.magnitude}
               />
             </mesh>
           );

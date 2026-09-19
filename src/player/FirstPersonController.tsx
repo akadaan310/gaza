@@ -70,6 +70,16 @@ export function FirstPersonController() {
 
     const manualInputMagnitude = Math.hypot(moveX, moveY);
     const state = useWorldStore.getState();
+
+    if (state.teleportRequest && !state.inInterstellar) {
+      const [tx, ty] = state.teleportRequest;
+      camera.position.set(tx, EYE_HEIGHT, -ty);
+      state.clearTeleportRequest();
+      state.setPlayerLocal([tx, ty], yawPitch.current.yaw);
+      state.setPlayerWorldPos([camera.position.x, camera.position.y, camera.position.z]);
+      return;
+    }
+
     const autoNav = state.autoNav;
 
     // Any deliberate manual movement hands control straight back to the

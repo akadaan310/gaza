@@ -27,6 +27,8 @@ export function SkySystem() {
   const discoveredCount = useWorldStore((s) => s.discovered.size);
   const starOpacity = Math.min(1, 0.25 + discoveredCount * 0.08);
   const isNight = useWorldStore((s) => Math.sin(s.timeOfDay * Math.PI * 2 - Math.PI / 2) < 0.15);
+  const lowPerf = useWorldStore((s) => s.perfTier === "low");
+  const shadowMapSize = lowPerf ? 1024 : 2048;
 
   return (
     <>
@@ -53,8 +55,8 @@ export function SkySystem() {
       )}
       <directionalLight
         ref={sunRef}
-        castShadow
-        shadow-mapSize={[2048, 2048]}
+        castShadow={!lowPerf}
+        shadow-mapSize={[shadowMapSize, shadowMapSize]}
         shadow-camera-near={1}
         shadow-camera-far={2000}
         shadow-camera-left={-400}

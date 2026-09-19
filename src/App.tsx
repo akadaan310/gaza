@@ -7,9 +7,12 @@ import { GazaWorld } from "./world/GazaWorld";
 import { InterstellarScene } from "./world/InterstellarScene";
 import { SkySystem } from "./world/SkySystem";
 import { Guide } from "./world/Guide";
+import { GuideField } from "./world/GuideField";
+import { ActivatedRelations } from "./world/ActivatedRelations";
 import { Portal } from "./world/Portal";
 import { CommandCenter } from "./world/CommandCenter";
 import { FocusResetter } from "./world/FocusResetter";
+import { PerformanceMonitor } from "./world/PerformanceMonitor";
 import { FirstPersonController, isTouchDevice } from "./player/FirstPersonController";
 import { IntroOverlay } from "./ui/IntroOverlay";
 import { ResearchPanel } from "./ui/ResearchPanel";
@@ -44,19 +47,22 @@ function KeyboardBindings() {
 export default function App() {
   const inInterstellar = useWorldStore((s) => s.inInterstellar);
   const commandCenterOpen = useWorldStore((s) => s.commandCenterOpen);
+  const perfTier = useWorldStore((s) => s.perfTier);
   const touch = isTouchDevice();
+  const lowPerf = perfTier === "low";
 
   return (
     <div className="app-root">
       <Canvas
-        shadows
+        shadows={!lowPerf}
         camera={{ fov: 68, near: 0.1, far: 6000 }}
-        gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.55 }}
-        dpr={touch ? [1, 1.5] : [1, 2]}
+        gl={{ antialias: !lowPerf, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 0.55 }}
+        dpr={lowPerf ? 1 : touch ? [1, 1.5] : [1, 2]}
       >
         <Suspense fallback={null}>
           <KeyboardBindings />
           <FocusResetter />
+          <PerformanceMonitor />
           <FirstPersonController />
           {inInterstellar ? (
             <InterstellarScene />
@@ -64,15 +70,23 @@ export default function App() {
             <>
               <SkySystem />
               <GazaWorld />
+              <GuideField />
+              <ActivatedRelations />
               <Guide />
               <Portal />
               <CommandCenter />
             </>
           )}
           <EffectComposer multisampling={0}>
-            <N8AO aoRadius={2.2} intensity={1.0} distanceFalloff={1} quality="medium" />
-            <Bloom mipmapBlur intensity={0.55} luminanceThreshold={0.5} luminanceSmoothing={0.15} />
-            <Vignette eskil={false} offset={0.15} darkness={0.45} />
+            {lowPerf ? (
+              <Bloom mipmapBlur={false} intensity={0.35} luminanceThreshold={0.6} luminanceSmoothing={0.15} />
+            ) : (
+              <>
+                <N8AO aoRadius={2.2} intensity={1.0} distanceFalloff={1} quality="medium" />
+                <Bloom mipmapBlur intensity={0.55} luminanceThreshold={0.5} luminanceSmoothing={0.15} />
+                <Vignette eskil={false} offset={0.15} darkness={0.45} />
+              </>
+            )}
           </EffectComposer>
         </Suspense>
       </Canvas>

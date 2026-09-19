@@ -8,6 +8,8 @@ export function CommandCenterPanel() {
   const open = useWorldStore((s) => s.commandCenterOpen);
   const playerLocal = useWorldStore((s) => s.playerLocal);
   const discovered = useWorldStore((s) => s.discovered);
+  const activatedGuides = useWorldStore((s) => s.activatedGuides);
+  const relationEdges = useWorldStore((s) => s.relationEdges);
   const realTiles = useWorldStore((s) => s.loadedRealTiles);
   const proceduralTiles = useWorldStore((s) => s.loadedProceduralTiles);
   const activeRelation = useWorldStore((s) => s.activeRelation);
@@ -58,8 +60,16 @@ export function CommandCenterPanel() {
             )}
           </section>
           <section>
+            <h4>GUIDES</h4>
+            <p>
+              {activatedGuides.size} of {stats.realBuildings + stats.derivedBuildings} interstellar
+              guides activated
+            </p>
+            <p>{relationEdges.length} relational path(s) formed between shared roots</p>
+          </section>
+          <section>
             <h4>DISCOVERED</h4>
-            <p>{discovered.size} structure(s) encountered</p>
+            <p>{discovered.size} landmark(s) encountered</p>
             <ul>
               {Array.from(discovered).map((id) => (
                 <li key={id}>{id}</li>
